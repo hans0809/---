@@ -370,4 +370,157 @@ def second(arr,L,R):
 
 print("博弈游戏胜者的分数：",winnerScore([1,100,7]))#100  
 
+# 改成动态规划
+"""
+建立两张二维表，初始化如下：其中x表示此处不合法，因为L不能超过R
 
+s:
+   0  1  2   L
+0  1  x  x 
+1    100 x
+2        7
+R
+
+
+
+f:
+   0  1  2   L
+0  0  x  x 
+1     0  x
+2        0
+R
+
+"""
+def dpWay_winnerScore(arr):
+    if not arr:
+        return 0
+    
+    n=len(arr)
+    f=[[0 for _ in range(n)] for _ in range(n)]
+    s=[[0 for _ in range(n)] for _ in range(n)]
+
+    for i in range(n):
+        f[i][i]=arr[i]
+        s[i][i]=0
+    
+    for i in range(1,n):
+        # 按对角线方式进行填值
+        L=0
+        R=i
+        while L<n and R<n:
+            f[L][R]=max(arr[L]+s[L+1][R],arr[R]+s[L][R-1])
+            s[L][R]=min(f[L+1][R],f[L][R-1])
+            L+=1
+            R+=1
+    return max(f[0][n-1],s[0][n-1])
+print("dp-博弈游戏胜者的分数：",dpWay_winnerScore([1,100,7]))#100  
+
+
+
+# 题目9：凑零钱，给一个数组，包含不同面值的钱，和一个总钱数，
+# 求凑成总钱数的总的方法数，数组中每一个面值的钱可以无限次使用
+
+# 方法1：暴力递归
+def ways1(arr,aim):
+    if not arr or aim<0:
+        return 0
+    return process1(arr,0,aim)
+# 可以自由使用arr[index...]中的所有面值，每一种面值都可以使用任意张
+# 组成rest，有多少种方法
+# 假设arr[0]=1，那么可枚举拿arr[0]的张数，从0开始，比如0，1，2，3，...
+# 直到张数*arr[0]>rest
+def process1(arr,index,rest):
+    # 没面值可以用了
+    if index==len(arr):
+        return 1 if rest==0 else 0
+    ans=0
+    zhang=0
+    while zhang*arr[index]<=rest:
+        ans+=process1(arr,index+1,rest-zhang*arr[index])
+        zhang+=1
+    return ans
+arr=[5,10,50,100]
+aim=1000
+print('凑零钱方法数为：',ways1(arr,aim))
+
+# 方法2：记忆化搜索
+def ways2(arr,aim):
+    if not arr or aim<0:
+        return 0
+    n=len(arr)
+    dp=[[-1 for _ in range(aim+1)] for _ in range(n+1)] 
+    return process2(arr,0,aim,dp)
+def process2(arr,index,rest,dp):
+    if dp[index][rest]!=-1:
+        return dp[index][rest]
+    
+    if index==len(arr):
+        dp[index][rest]=1 if rest==0 else 0
+        return dp[index][rest]
+    
+    ans=0
+    zhang=0
+    while zhang*arr[index]<=rest:
+        ans+=process2(arr,index+1,rest-zhang*arr[index],dp)
+        zhang+=1
+    dp[index][rest]=ans# 加入缓存
+    return ans
+arr=[5,10,50,100]
+aim=1000
+print('记忆化搜索-凑零钱方法数为：',ways2(arr,aim))
+
+# 方法3：动态规划
+""" 
+初始化如下：
+   0 1 2 3 ... 1000  aim
+0
+1
+2
+3
+4  1 0 0 0 ...  0
+index
+
+"""
+def ways3(arr,aim):
+    if not arr or aim<0:
+        return 0
+    n=len(arr)
+    dp=[[-1 for _ in range(aim+1)] for _ in range(n+1)] 
+
+    dp[n][0]=1
+    for col in range(1,aim+1):
+        dp[n][col]=0
+    
+    for index in range(n-1,-1,-1):
+        for rest in range(0,aim+1):
+            ans=0
+            zhang=0
+            while zhang*arr[index]<=rest:
+                ans+=dp[index+1][rest-zhang*arr[index]]
+                zhang+=1
+            dp[index][rest]=ans
+
+    return dp[0][aim]
+arr=[5,10,50,100]
+aim=1000
+print('动态规划-凑零钱方法数为：',ways3(arr,aim))
+
+# 方法4：优化动态规划
+def ways4(arr,aim):
+    if not arr or aim<0:
+        return 0
+    n=len(arr)
+    dp=[[-1 for _ in range(aim+1)] for _ in range(n+1)] 
+
+    dp[n][0]=1
+    for col in range(1,aim+1):
+        dp[n][col]=0
+    
+    for index in range(n-1,-1,-1):
+        for rest in range(0,aim+1):
+            dp[index][rest]=dp[index+1][rest]
+            if rest-arr[index]>=0:
+                dp[index][rest]+=dp[index][rest-arr[index]]
+
+    return dp[0][aim]
+print('优化的动态规划-凑零钱方法数为：',ways4(arr,aim))
