@@ -412,11 +412,42 @@ def get_max_value(w,v,index,alreadyW,bag):
     if p2next!=-1:
         p2=p2next+v[index]
     return max(p1,p2)
-
 w=[1,2,30]
 v=[5,6,7]
 bag=12
 print('能够获得最大价值：',getMaxValue(w,v,bag))
+
+# 也可以在进入递归函数之前就判断是否超过袋子承受重量，超过了就不去递归了，更改代码如下
+def getMaxValue1(w,v,bag):
+    return get_max_value(w,v,0,0,bag)
+# 第0...index-1号货物已经做了选择(拿还是不拿)，使得已经达到的重量是alreadyW
+# 求拿or不拿第index...号物品能够获得的最大价值
+def get_max_value1(w,v,index,alreadyW,bag):
+    """
+    w，v，bag不变
+    index：第i个物品的下标i
+    alreadyW: 此时背包中已经放入的物品的总重量
+    """
+    
+    #  重量没超
+    # 但没物品可拿了，第index...号物品对应的最大价值是0
+    if index==len(w):
+        return 0
+    
+    # 有物品可拿
+    #不拿第index个物品能够获得最大价值p1
+    p1=get_max_value1(w,v,index+1,alreadyW,bag)
+    #拿第index个物品能够获得的最大价值p2
+    p2=-1
+    if alreadyW+w[index]<=bag:# 这里保证了重量不会超
+        p2=v[index]+get_max_value1(w,v,index+1,alreadyW+w[index],bag)
+
+    return max(p1,p2)
+
+w=[1,2,30]
+v=[5,6,7]
+bag=12
+print('能够获得最大价值：',getMaxValue1(w,v,bag))
 
 # 把上述解法改成动态规划
 """
@@ -697,3 +728,165 @@ def ways4(arr,aim):
 
     return dp[0][aim]
 print('优化的动态规划-凑零钱方法数为：',ways4(arr,aim))
+
+
+# 题目9扩展：凑零钱，给一个数组，包含不同面值的钱，和一个总钱数，
+# 求凑成总钱数的总的方法数，数组中每一个面值的钱**只能使用一次**
+
+# 暴力递归(代码好像有问题)
+def ways1(arr,aim):
+    if not arr or aim<0:
+        return 0
+    return process1(arr,0,aim)
+# 可以自由使用arr[index...]中的所有面值，每一种面值只能使用一次
+# 组成rest，有多少种方法
+
+def process1(arr,index,rest):
+
+    if rest<0:
+        return 0
+
+    # 没面值可以用了
+    if index==len(arr):
+        return 1 if rest==0 else 0
+
+    # 不使用第index个面值的钱，方法数
+    not_use_index_ans=process1(arr,index+1,rest)
+    
+    # 使用第index个面值的钱，方法数
+    use_index_ans=0
+    for i in range(index,len(arr)):
+        if rest-arr[index]>=0:
+            use_index_ans=process1(arr,index+1,rest-arr[index])
+            break
+        # 如果没进if，那么use_index_ans=0(中开头的if rest<0: return 0)
+
+    ans=use_index_ans+not_use_index_ans
+    return ans
+
+arr=[500,300,900,100,2,22,123,700,98,346]
+aim=1000
+print('[变种]凑零钱方法数为：',ways1(arr,aim))
+
+
+# 多样本位置全对应的尝试模型
+# 题目10：求两个字符串的最长公共子序列。比如str1="abc123e",str2="s123d"，则答案为"123"
+# 解法：弄一张[len(str1),len(str2)]的表dp，dp[i][j]代表str1[...i]和str2[...j]的最长公共子序列
+# 总共分4种情况：
+# 1)str1[...i]和str2[...j]的最长公共子序列既不以str1[i]结尾，也不以str2[j]结尾，此时dp[i][j]=dp[i-1][j-1]
+# 2)str1[...i]和str2[...j]的最长公共子序列以str1[i]结尾，不以str2[j]结尾，此时dp[i][j]=dp[i][j-1]
+# 3)str1[...i]和str2[...j]的最长公共子序列不以str1[i]结尾，以str2[j]结尾，此时dp[i][j]=dp[i-1][j]
+# 4)str1[...i]和str2[...j]的最长公共子序列既以str1[i]结尾，又以str2[j]结尾，此时dp[i][j]=dp[i-1][j-1]+1
+# 注：[...i]等价于[0...i]
+# 初始时会将第0行和第0列做初始化
+
+def lcse(str1,str2):
+    n1,n2=len(str1),len(str2)
+    dp=[[0 for _ in range(n2)] for _ in range(n1)]
+    dp[0][0]=1 if str1[0]==str2[0] else 0
+    # 初始化第0列
+    for i in range(1,n1):
+        dp[i][0]=max(dp[i-1][0],1 if str1[i]==str2[0] else 0)
+    # 初始化第0行
+    for j in range(1,n2):
+        dp[0][j]=max(dp[0][j-1],1 if str1[0]==str2[j] else 0)
+    # 计算剩余位置
+    for i in range(1,n1):
+        for j in range(1,n2):
+            dp[i][j]=max(dp[i-1][j],dp[i][j-1])# 处理情况2)和3)
+            if str1[i]==str2[j]:# 情况4，若命中，则此时最长公共子序列的长度一定比情况1(dp[i][j]=dp[i-1][j-1])大，因此可以省略和情况1的比较
+                dp[i][j]=max(dp[i][j],dp[i-1][j-1]+1)
+            # 注意：下面的else可以省略，因为情况2)中的dp[i-1][j]和情况3中的dp[i][j-1]
+            # 都会依赖到情况1中的dp[i-1][j-1]，因此情况2)和情况3)的结果不可能比情况1)小，所以不要再考虑情况1了
+            else:# 若情况4没命中，则考虑情况1
+                dp[i][j]=max(dp[i][j],dp[i-1][j-1])
+    return dp[n1-1][n2-1]+1
+str1="abcde11"
+str2="ace11"
+print('最长公共子序列长度为：',lcse(str1,str2))
+
+
+# 业务限制的模型(同时也是从左往右的尝试模型，但是有业务上的限制)
+
+# 题目11：给定一个数组arr(按时间有序)，代表每个人喝完咖啡准备刷杯子的时间点，
+# 只有一台咖啡机，一次只能洗一个杯子，时间耗费a，洗完才能洗下一杯，
+# 每个咖啡杯也可以自己挥发干净，时间耗费b，咖啡杯可以并行挥发，
+# 返回让所有咖啡杯变干净的最早完成时间
+
+# 暴力递归：
+# washLine表示洗咖啡的机器可用的时间点，
+# 假设drinks[0...index-1]都已经洗干净了，
+# 现在只需要考虑drinks[index...]都想变干净，返回所需最少时间对应的时间点
+
+def solve(drinks,a,b):
+    return process(drinks,a,b,0,0)
+def process(drinks,a,b,index,washLine):
+    # 只剩最后一杯了
+    if index ==len(drinks)-1:
+        # 用机器洗或挥发掉，选最早结束的
+        return min(
+            max(washLine,drinks[index])+a,#用机器洗，最早结束时间。有可能在wsahLine时间点第index个咖啡还没喝完，得等喝完，也就是drinks[index]时间带你才能开始洗，花费时间为a
+            drinks[index]+b)# 挥发，喝完时间点为drinks[index]，挥发花费时间为b
+    # 剩余不止一杯咖啡
+    # 1) 用机器洗,drinks[index...]都想变干净，所需最少时间对应的时间点是p1
+    # wash是洗完第index杯时的时间点
+    wash=max(washLine,drinks[index])+a
+    # 递归求解第index+1...杯(drinks[index+1...])洗干净的最早时间点
+    next1=process(drinks,a,b,index+1,wash)# 第index杯用了机器洗，所以占用时间从washLine到wash，机器从wash这个时间点可用
+    p1=max(wash,next1)
+    #2) 自己挥发，drinks[index...]都想变干净，所需最少时间对应的时间点是p2
+    dry=drinks[index]+b# 挥发完的时间点是dry
+    # 递归求解第index+1...杯(drinks[index+1...])洗干净的最早时间点
+    next2=process(drinks,a,b,index+1,washLine)# 第index杯不用机器洗，所以不占用时间，机器仍从washLine这个时间点可用
+    p2=max(dry,next2)
+
+    # 取最小的
+    return min(p1,p2)
+drinks=[1,1,5,5,7,10,12,12,12,12,12,12,15]
+a=3
+b=10
+print('洗咖啡杯最早结束的时间点：',solve(drinks,a,b))
+
+# 动态规划
+def dpSolve(drinks,a,b):
+    # 挥发所用时间比机器洗的还快
+    if a>=b:
+        return drinks[len(drinks)-1]+b
+    
+    n=len(drinks)
+    limit=0# 咖啡机什么时候可用(即开始可用的时间点)
+    # 不挥发，全部用机器洗，能够获得limit的最大取值
+    for i in range(n):
+        limit=max(limit,drinks[i])+a
+    
+    dp=[[0 for _ in range(limit+1)] for _ in range(n)]
+    # 只剩一杯咖啡，对应第n-1行
+    for washLine in range(0,limit+1):
+        dp[n-1][washLine]=min(
+            max(washLine,drinks[n-1])+a,
+            drinks[n-1]+b)
+    # 计算其余位置(# 剩余不止一杯咖啡)
+    for index in range(n-2,-1,-1):
+        for washLine in range(0,limit+1):
+                
+            # 1) 用机器洗,drinks[index...]都想变干净，所需最少时间对应的时间点是p1
+            # wash是洗完第index杯时的时间点
+            p1=99999999999999999999
+            wash=max(washLine,drinks[index])+a
+            if wash<=limit:
+                next1=dp[index+1][wash]# 递归求解第index+1...杯(drinks[index+1...])洗干净的最早时间点
+                p1=max(wash,next1)
+            #2) 自己挥发，drinks[index...]都想变干净，所需最少时间对应的时间点是p2
+            dry=drinks[index]+b# 挥发完的时间点是dry
+            # washLine永远不会超过limit，for循环内层保证了这一点
+            next2=dp[index+1][washLine]# 递归求解第index+1...杯(drinks[index+1...])洗干净的最早时间点
+            p2=max(dry,next2)#p2也不会超过limit
+
+            dp[index][washLine]=min(p1,p2)
+
+    return dp[0][0]
+
+drinks=[1,1,5,5,7,10,12,12,12,12,12,12,15]
+a=3
+b=10
+print('洗咖啡杯最早结束的时间点：',dpSolve(drinks,a,b))
