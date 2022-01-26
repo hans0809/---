@@ -22,6 +22,7 @@ def printZigZag(matrix):
     fromUp2Down=False#是否是按照从右上到左下的顺序进行打印，第一次不是，因此初始化为False
 
     while Ar!=Endr+1:
+    #while Bc!=Endc+1:# 都可以
         # 打印(Ar,Ac)和(Br,Bc)连成的斜线上的元素，打印的方向由fromUp2Down指定
         printLevel(matrix,Ar,Ac,Br,Bc,fromUp2Down)
 

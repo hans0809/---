@@ -300,14 +300,14 @@ print('字符串"aac"的所有不重复全排列为：',Permutation2('aac'))
 # 那么一个字符串比如"111"就可以转化为"AAA","KA"和"AK"
 # 给定一个只有数字字符组成的字符串，返回有多少种转化结果
 
-def getNumber(s):
+def getNumber1(s):
     if not s:
         return 0
     s=list(s)
-    return get_number(s,0)
+    return get_number1(s,0)
 # 第0...index-1号字符已经转化好了
 # 看index...能够获得多少种转化结果
-def get_number(s,i):
+def get_number1(s,i):
     # i来到了终止位置，得到一种转化方案
     if i==len(s):
         return 1
@@ -318,23 +318,23 @@ def get_number(s,i):
     
     # 字符s[i]不是'0'
     if s[i]=='1':
-        res=get_number(s,i+1)
+        res=get_number1(s,i+1)
         if i+1<len(s):
-            res+=get_number(s,i+2)
+            res+=get_number1(s,i+2)
         return res
     if s[i]=='2':
-        res=get_number(s,i+1)
+        res=get_number1(s,i+1)
         if i+1<len(s) and '0'<=s[i+1]<='6':
-            res+=get_number(s,i+2)
+            res+=get_number1(s,i+2)
         return res
     
     # s[i] in '3'~'9'
-    return get_number(s,i+1)
+    return get_number1(s,i+1)
     
-print("字符串{}转化后有{}种可能".format("11101",getNumber("11101")))#后面的101只能拆成10 1，前面的11可以转成AA 或者K，因此共2种转化结果
+print("字符串{}转化后有{}种可能".format("11101",getNumber1("11101")))#后面的101只能拆成10 1，前面的11可以转成AA 或者K，因此共2种转化结果
 
 # 改成动态规划
-def dpWay_getNumber(s):
+def dpWay_getNumber1(s):
     if not s:
         return 0
     s=list(s)
@@ -374,7 +374,50 @@ def dpWay_getNumber(s):
         # if '3'<=s[i]<='9':
         #     dp[i]=dp[i+1]
     return dp[0]
-print("字符串{}转化后有{}种可能(动态规划解法)".format("11101",dpWay_getNumber("11101")))#后面的101只能拆成10 1，前面的11可以转成AA 或者K，因此共2种转化结果
+print("字符串{}转化后有{}种可能(动态规划解法)".format("11101",dpWay_getNumber1("11101")))#后面的101只能拆成10 1，前面的11可以转成AA 或者K，因此共2种转化结果
+
+# 另外一种写法
+# 1. 暴力递归
+def getNumber2(s):
+    if not s:
+        return 0
+    s=list(s)
+    return get_number2(s,0)
+def get_number2(s,index):
+    if index==len(s):
+        return 1
+    
+    if s[index]=='0':
+        return 0
+    
+    res=get_number2(s,index+1)
+    if index==len(s)-1:
+        return res
+    
+    if s[index+1]<='6':
+        res+=get_number2(s,index+2)
+    
+    return res
+print("字符串{}转化后有{}种可能".format("11101",getNumber2("11101")))
+# 2. 动态规划
+def dpWay_getNumber2(s):
+    if not s:
+        return 0
+    s=list(s)
+    n=len(s)# 数字字符串长度
+
+    dp=[0 for _ in range(n+1)]
+    dp[n]=1# 找到一种方案
+    dp[n-1]=0 if s[n-1]=='0' else 1# 好像可省略。。。
+    for i in range(n-2,-1,-1):
+        if s[i]=='0':
+            dp[i]=0
+        else:
+            dp[i]=dp[i+1]
+            if i<n-1 and s[i+1]<='6':
+                dp[i]+=dp[i+2]
+    return dp[0]
+print("字符串{}转化后有{}种可能(动态规划解法)".format("11101",dpWay_getNumber2("11101")))
 
 
 
@@ -890,3 +933,6 @@ drinks=[1,1,5,5,7,10,12,12,12,12,12,12,15]
 a=3
 b=10
 print('洗咖啡杯最早结束的时间点：',dpSolve(drinks,a,b))
+
+
+# 题目12：

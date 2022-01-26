@@ -6,6 +6,9 @@
 # 6)写代码，在代码中考虑如何把左树信息和右树信息整合出整棵树的信息
 
 ############################################## 首先建立一棵二叉树
+from operator import le
+
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -547,3 +550,109 @@ def fillParentMap(root,parent_map):
         fillParentMap(root.right,parent_map)
 print("#####题目10：求二叉树中两个节点的最近公共祖先(哈希表解法)#####")
 print(lowestAncestor2(root,root.left.left,root.right).val)
+
+
+# 题目11：给定一个非负整数n，代表二叉树的节点个数。返回能形成多少种不同的二叉树结构(与值无关，只看结构)。
+
+# 方法1：暴力递归
+def numBts(n):
+    if n<0:
+        return 0
+    if n==0 or n==1:
+        return 1
+    if n==2:
+        return 2
+    
+    res=0
+    # 根结点始终占一个
+    # 遍历左子树节点数的所有可能
+    for leftNum in range(n):
+        # 左子树能够形成的不同二叉树的个数
+        leftWays=numBts(leftNum)
+        rightNum=n-leftNum-1# 此时对应的右子树节点数
+        # 右子树能够形成的不同二叉树的个数
+        rightWays=numBts(rightNum)
+        res+=leftWays*rightWays# 整体能够形成的不同二叉树的个数，用乘法
+    return res
+n=3
+print('能够形成不同二叉树的个数：',numBts(n))
+# for n in range(4):
+#     print(numBts(n))
+
+# 方法2：动态规划
+def numBts2(n):
+    if n<0:
+        return 0
+    if n==0 or n==1:
+        return 1
+    if n==2:
+        return 2
+    
+    # dp[i]:共i个节点时, 能够形成的不同的二叉树结构的总数
+    dp=[0 for _ in range(n+1)]
+    dp[0]=1
+
+    # 遍历填表
+    for totalNum in range(1,n+1):
+        for leftNum in range(totalNum):
+            dp[totalNum]+=dp[leftNum]*dp[totalNum-leftNum-1]
+    #print(dp)
+    return dp[n]
+n=3
+print('能够形成不同二叉树的个数：',numBts2(n))
+
+
+# 题目12：二叉树每个节点都有一个int型权值，给定一棵二叉树，要求计算出从根结点到叶节点的所有路径中，权值和最大的值为多少
+
+# 二叉树的递归套路解法
+def maxDis(root):
+    if not root:
+        return 0
+    return max_dis(root)
+def max_dis(root):
+    # 叶子节点
+    if not root.left and not root.right:
+        return root.val
+    # 求从子树的根结点(如果存在)出发到叶子节点的最大路径(权值)和mdis
+    mdis=0
+    if  root.left:
+        mdis=max_dis(root.left)
+    if  root.right:
+        mdis=max(mdis,max_dis(root.right))
+    # 返回整棵树的根结点权值+子树mdis就是答案
+    return root.val+mdis
+print('从根结点到叶子节点的最大权值为：',maxDis(root))
+# 另外一种解法
+maxSum=0
+def maxDis2(root):
+    p(root,0)
+    return maxSum
+def p(root,pre):
+    global maxSum
+    # pre:从根结点出发，到当前节点的上一节点的最大路径(权值)和
+    if not root.left and not root.right:#叶子节点
+        maxSum=max(maxSum, pre+root.val)
+    if root.left:
+        p(root.left,pre+root.val)
+    if root.right:
+        p(root.right,pre+root.val)
+print('从根结点到叶子节点的最大权值为：',maxDis2(root))
+
+# 如果改成最小路径和呢？很简单
+def minDis(root):
+    if not root:
+        return 0
+    return min_dis(root)
+def min_dis(root):
+    # 叶子节点
+    if not root.left and not root.right:
+        return root.val
+    # 求从子树的根结点(如果存在)出发到叶子节点的最大路径(权值)和mdis
+    mdis=0
+    if  root.left:
+        mdis=min_dis(root.left)
+    if  root.right:
+        mdis=min(mdis,min_dis(root.right))
+    # 返回整棵树的根结点权值+子树mdis就是答案
+    return root.val+mdis
+print('从根结点到叶子节点的最小权值为：',minDis(root))
