@@ -185,10 +185,10 @@ def rotateEdge(matrix,a,b,c,d):
     # 看着第一组，就能推出下面的代码了
     for i in range(d-b):
         temp=matrix[a][b+i]
-        matrix[a][b+i]=matrix[c-i][b]
-        matrix[c-i][b]=matrix[c][d-i]
-        matrix[c][d-i]=matrix[a+i][d]
-        matrix[a+i][d]=temp
+        matrix[a][b+i]=matrix[c-i][b]#左上角=左下角（针对i=0时）
+        matrix[c-i][b]=matrix[c][d-i]# 左下角=右下角（针对i=0时）
+        matrix[c][d-i]=matrix[a+i][d]# 右下角=右上角（针对i=0时）
+        matrix[a+i][d]=temp# 右上角=左上角（针对i=0时）
 """
 1   2   3   4
 5   6   7   8
