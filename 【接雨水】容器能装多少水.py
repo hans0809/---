@@ -27,3 +27,26 @@ arr=[3,1,2,5,2,4]
 print('最多能盛的水是：',maxWater(arr))
 
 # 双指针
+def maxWater2(arr):
+    n=len(arr)
+    maxL,maxR=arr[0],arr[n-1]# 当前左/右最大值
+    L,R=1,n-2# 左右指针
+
+    res=0
+    while L<=R:
+        if maxL<=maxR:
+            t=maxL-arr[L]
+            if t>0:
+                res+=t
+            maxL=max(maxL,arr[L])
+            L+=1
+        else:
+            t=maxR-arr[R]
+            if t>0:
+                res+=t
+            maxR=max(maxR,arr[R])
+            R-=1
+    return res
+arr=[3,1,2,5,2,4]  
+print('最多能盛的水是：',maxWater2(arr))
+
