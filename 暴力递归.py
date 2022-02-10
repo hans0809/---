@@ -868,7 +868,7 @@ def process(drinks,a,b,index,washLine):
     if index ==len(drinks)-1:
         # 用机器洗或挥发掉，选最早结束的
         return min(
-            max(washLine,drinks[index])+a,#用机器洗，最早结束时间。有可能在wsahLine时间点第index个咖啡还没喝完，得等喝完，也就是drinks[index]时间带你才能开始洗，花费时间为a
+            max(washLine,drinks[index])+a,#用机器洗，最早结束时间。有可能在wsahLine时间点第index个咖啡还没喝完，得等喝完，也就是drinks[index]时间点才能开始洗，花费时间为a
             drinks[index]+b)# 挥发，喝完时间点为drinks[index]，挥发花费时间为b
     # 剩余不止一杯咖啡
     # 1) 用机器洗,drinks[index...]都想变干净，所需最少时间对应的时间点是p1
