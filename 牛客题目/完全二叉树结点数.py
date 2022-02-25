@@ -2,7 +2,7 @@
 class Solution:
     def nodeNum(self , root) -> int:
         # write code here
-        # 求树高
+        # 求树高（针对完全二叉树）
         def getHeight(root):
             cnt=0
             while root:
