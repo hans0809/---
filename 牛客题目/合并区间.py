@@ -12,9 +12,13 @@ class Solution:
         for i in range(1,len(intervals)):
             last=out[-1]
             cur_left,cur_right=intervals[i].start,intervals[i].end
+
             if last.end < cur_left:
+                #当前区间与上一个区间没有交集
                 out.append(intervals[i])
             else:
                 #last.start=min(last.start,cur_left)
+                #当前区间与上一个区间存在交集，直接将当前区间合并到上个区间中
                 last.end=max(last.end,cur_right)
+
         return out

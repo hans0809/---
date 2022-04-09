@@ -230,7 +230,7 @@ def buildSerialLeverOrder(res_list):#反序列化
     #res_list就是序列化的结果，比如[1, 2, 3, 4, 5, 6, 7, None, None, None, None, None, None, None, None]
     if not res_list:
         return 
-
+          
     #记录反序列化的结果
     queue=[]
 
@@ -311,5 +311,3 @@ def build_serial_pre_order(res_list):
     root.right=build_serial_pre_order(res_list)
     return root
 buildSerialPreOrder(preSerialize(root))#[1, 2, 4, 5, 3, 6, 7]   
-
-

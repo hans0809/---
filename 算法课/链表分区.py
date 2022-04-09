@@ -123,18 +123,3 @@ solution(head,element=10)#element=10,1,100
 
 
 #此外，还有笔试解法
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-

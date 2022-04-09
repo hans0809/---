@@ -19,7 +19,7 @@ class Solution:
         for i in range(1,n):
             for j in range(0,i):
                 # 求dp[i]:
-                # dp[i]可由前i-1个位置得到，具体地，取dp[0...i-1]中的最大值，这可以由·j遍历0到i-1位置得到
+                # dp[i]可由前i-1个位置得到，具体地，取dp[0...i-1]中的最大值，这可以由j遍历0到i-1位置得到
                 # 然后再同原来的dp[i]比较取较大值
                 if nums[i]>nums[j]:
                     dp[i]=max(dp[i],dp[j]+1)

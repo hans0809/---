@@ -38,7 +38,6 @@ class Solution:
         res=0
         gap=10000000000000
         for i in range(n):
-
             a=nums[i]
             left,right=i+1,n-1
             while left<right:
@@ -54,5 +53,4 @@ class Solution:
 
                 elif a+nums[left]+nums[right]<target:
                     left+=1
-
         return res

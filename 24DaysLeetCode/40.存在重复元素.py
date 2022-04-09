@@ -25,6 +25,3 @@ class Solution:
             else:
                 record[num]=i
         return False
-
-
-

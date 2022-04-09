@@ -59,5 +59,5 @@ class Solution:
         
         for i in range(2,n+1):
             dp[i]=max(dp[i-1]+nums[i-1],nums[i-1])
-        return max(dp[1:])
+        return max(dp[1:])# nums只包含一个负数，比如-1时，如果从0开始，那么dp[0]=0，返回0，但答案是-1
             
