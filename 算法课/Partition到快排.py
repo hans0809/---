@@ -61,7 +61,7 @@ print('快排1.0测试结果：',arr)# [1, 2, 3, 4, 7, 8, 9, 98, 99, 100]
 # 对于输入的arr，将arr的最后一个元素看作是partition函数的num参数，并把它单独拿出来，
 # 稍后处理的arr其实是arr[0:-1]，不含最后一个元素
 # 对arr做partition，将arr分为三部分，左边区域小于num，中间区域等于num，右边区域大于num（while循环内）
-# 然后将之前拿出来的元素arr[R]与大于num区域的左边界(下标为b，s是大于num区域的左边界)位置元素进行交换，
+# 然后将之前拿出来的元素arr[R]与大于num区域的左边界(下标为b，b是大于num区域的左边界)位置元素进行交换，
 def partition_v2(arr,L,R):
     if L>=R:
         return 
