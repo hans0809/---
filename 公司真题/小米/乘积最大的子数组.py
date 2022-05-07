@@ -8,9 +8,9 @@
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
         n=len(nums)
-        #dp[i]_max: nums[0...i-1]的乘积最大的非空连续组数组的元素乘积
+        #dp_max[i]: nums[0...i-1]的乘积最大的非空连续组数组的元素乘积
         dp_max=[0 for _ in range(n+1)]
-        #dp[i]_min: nums[0...i-1]的乘积最小的非空连续组数组的元素乘积
+        #dp_min[i]: nums[0...i-1]的乘积最小的非空连续组数组的元素乘积
         dp_min=[0 for _ in range(n+1)]
 
         #初始化
