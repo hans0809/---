@@ -46,6 +46,8 @@ class Solution:
         num_set = set(nums)
 
         for num in num_set:
+            # 如果num-1存在，那么以num-1开头的连续序列长度一定大于以num开头的，
+            # 因此就不需要再计算以num开头的连续子序列的长度了
             if num - 1 not in num_set:
                 current_num = num
                 current_streak = 1
