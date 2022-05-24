@@ -6,7 +6,7 @@ class Solution:
         l,r=0,n-1
         while l<r:
             mid=(l+r)//2
-            if rotateArray[mid]>rotateArray[r]:# jiangxu
+            if rotateArray[mid]>rotateArray[r]:# 降序
                 l=mid+1
             elif rotateArray[mid]==rotateArray[r]:
                 r=r-1
