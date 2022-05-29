@@ -95,3 +95,24 @@ class Solution:
                 self.topk_split(nums, k, index+1, right)
             else:
                 self.topk_split(nums, k, left, index-1)
+
+# 第2种代码的partation也可以这样写
+    def partition(self, arr, low, high):
+        import random
+        pivot_idx = random.randint(low, high)                   # 随机选择pivot
+        arr[low], arr[pivot_idx] = arr[pivot_idx], arr[low]     # pivot放置到最左边
+        pivot = arr[low]                                        # 选取最左边为pivot
+
+        left, right = low, high     # 双指针
+        while left < right:
+            
+            while left<right and arr[right] >= pivot:          # 找到右边第一个<pivot的元素
+                right -= 1
+            arr[left] = arr[right]                             # 并将其移动到left处
+            
+            while left<right and arr[left] <= pivot:           # 找到左边第一个>pivot的元素
+                left += 1
+            arr[right] = arr[left]                             # 并将其移动到right处
+        
+        arr[left] = pivot           # pivot放置到中间left=right处
+        return left
