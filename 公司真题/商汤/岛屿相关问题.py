@@ -40,6 +40,28 @@ class Solution:
 
 # 计算并返回 grid 中最大的岛屿面积。如果没有岛屿，则返回面积为 0 。
 
+# [2022.5.30]二刷补充：与上一题保持格式模板一致的写法
+class Solution:
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+        def dfs(grid,i,j):
+            ans=1
+            grid[i][j]=0# 避免重复计算面积
+            
+            for delta_i,delta_j in [[0,1],[0,-1],[1,0],[-1,0]]:
+                new_i,new_j=i+delta_i,j+delta_j
+                if 0<=new_i<m and 0<=new_j<n and grid[new_i][new_j]==1:
+                    ans+=dfs(grid,new_i,new_j)
+            return ans
+
+        m,n=len(grid),len(grid[0])#mxn
+        ans=0
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j]==1:
+                    ans=max(ans,dfs(grid,i,j))
+        return ans
+
+
 class Solution:
     """
     #方法1：DFS
