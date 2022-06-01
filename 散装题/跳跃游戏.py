@@ -40,3 +40,5 @@ def jumpGame(n,nums):
     return dp[n-1]!=big,dp[n-1]
 print(jumpGame(n1,nums1))
 print(jumpGame(n2,nums2))
+
+# 但是leetcode不通过，因为测试用例很大，超时了
