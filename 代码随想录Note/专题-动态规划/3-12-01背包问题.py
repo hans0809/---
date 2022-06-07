@@ -4,7 +4,7 @@
 def bag(w,weights,values):
     """
     w: int 背包能够承受的最大重量
-    weights:list 每件物品的种类
+    weights:list 每件物品的重量
     values: list 每件物品的价值
     """
     n=len(values)# 物品数

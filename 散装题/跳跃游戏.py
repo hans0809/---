@@ -40,5 +40,31 @@ def jumpGame(n,nums):
     return dp[n-1]!=big,dp[n-1]
 print(jumpGame(n1,nums1))
 print(jumpGame(n2,nums2))
+print(jumpGame(2,[1,0]))
 
 # 但是leetcode不通过，因为测试用例很大，超时了
+
+def canJump( nums):
+    n=len(nums)
+    if n==1 and nums[0]==0:
+        return True
+    elif nums[0]==0:
+        return False
+
+    #dp[i]:到达第i个下标所需最少步数
+    big=9999999999999
+    dp=[big for _ in range(n+1)]
+
+    dp[1]=0# 初始位于第1个下标
+
+    for i in range(2,n+1):
+        minSteps=big
+        for j in range(0,i):
+            if j+nums[j]>=i:
+                minSteps=min(minSteps,dp[j]+1)
+                dp[i]=minSteps
+                return True if dp[n]!=big else False
+# n=int(input())
+# nums=map(int,input().split(' '))
+# res=canJump(nums)
+# print(res)

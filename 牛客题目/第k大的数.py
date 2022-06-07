@@ -59,7 +59,7 @@ class Solution:
  
         #self.quicksort(nums,left,right)
         self.topk_split(nums,len(nums)-k,left,right)
-        # 求第k大的数，相当于求求len(nums)-k个小的数
+        # 求第k大的数，相当于求第len(nums)-k个小的数
  
         return nums[len(nums)-k]
     def partition(self,nums,left,right):
