@@ -96,7 +96,7 @@ class Solution:
             else:
                 self.topk_split(nums, k, left, index-1)
 
-# 第2种代码的partation也可以这样写
+    # 第2种代码的partation也可以这样写
     def partition(self, arr, low, high):
         import random
         pivot_idx = random.randint(low, high)                   # 随机选择pivot

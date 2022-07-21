@@ -18,15 +18,15 @@
 
 class Solution:
     def isSubsequence(self, s: str, t: str) -> bool:
-        #dp[i][j]: s[0..i-1]和t[0...j-1]中相同子序列的长度
+        # dp[i][j]: s[0..i-1]和t[0...j-1]中相同子序列的长度
         # 最后如果dp[len(s)-1][len(t)-1]等于len(s)，那么就说明s是t的子序列
         slen,tlen=len(s),len(t)
         dp=[[0 for _ in range(tlen+1)] for _ in range(slen+1)]
 
-        #初始化,t为空串时，dp[i][0]=0,第一列全0
+        # 初始化,t为空串时，dp[i][0]=0,第一列全0
         for i in range(slen):
             dp[slen][0]=0
-        #s为空串时，dp[0][i]=0,第一行全0
+        # s为空串时，dp[0][i]=0,第一行全0
         for i in range(tlen):
             dp[0][i]=0
         

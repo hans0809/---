@@ -1,7 +1,7 @@
 # 给你一个整数数组 nums 和一个整数 k ，请你统计并返回 该数组中和为 k 的子数组的个数 。
 
- # 枚举法超时 O(N2)
- class Solution:
+# 枚举法超时 O(N2)
+class Solution:
     def subarraySum(self, nums: List[int], k: int) -> int:
         cnt=0
         n=len(nums)

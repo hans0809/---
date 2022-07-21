@@ -8,7 +8,7 @@ class Solution:
         if n==0:
             return []
 
-        left=[0 for _ in range(n)]# left[i]代表a[0...i]所有元素的乘积
+        left=[0 for _ in range(n)]# left[i]代表a[0...i-1]所有元素的乘积
         p=1
         for i in range(n):
             p*=a[i]
